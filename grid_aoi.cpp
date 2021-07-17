@@ -20,6 +20,7 @@ Node::Node(int _entityId, float _aoi)
 inline int Min(int a, int b) { return (a < b ? a : b); }
 inline int Max(int a, int b) { return (a < b ? b : a); }
 
+//进入回调，entityId2进入entityId1的视野
 inline void cb_enter(struct lua_State *L, int entityId1, int entityId2)
 {
 	lua_getfield(L, -1, "OnEnter");
@@ -29,6 +30,7 @@ inline void cb_enter(struct lua_State *L, int entityId1, int entityId2)
 	lua_call(L, 3, 0);
 }
 
+//离开回调，entityId2离开entityId1的视野
 inline void cb_leave(struct lua_State *L, int entityId1, int entityId2)
 {
 	lua_getfield(L, -1, "OnLeave");
