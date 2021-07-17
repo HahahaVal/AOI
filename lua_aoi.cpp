@@ -14,8 +14,8 @@ static int new_manager(struct lua_State *L) {
 		luaL_error(L, "new_manager param number is not correct!");
 		return 0;
     }
-    int width = lua_tointeger(L, 1);
-    int length = lua_tointeger(L, 2);
+    int width = luaL_checkinteger(L, 1);
+    int length = luaL_checkinteger(L, 2);
     Manager **manager = (Manager **) lua_newuserdata(L, sizeof(Manager *));
     *manager = new Manager(width, length);
     //通常，用来区别一个 userdata 类型与另外一个 userdata 类型的方法是为其创建一个特定的元表。
@@ -34,10 +34,11 @@ static int lenter(struct lua_State *L) {
 		return 0;
     }
     Manager **manager = check_grid_manager(L);
-    int entityId = lua_tointeger(L, 3);
-    int aoi = lua_tointeger(L, 4);
-    int x = lua_tointeger(L, 5);
-    int y = lua_tointeger(L, 6);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    int entityId = luaL_checkinteger(L, 3);
+    int aoi = luaL_checkinteger(L, 4);
+    int x = luaL_checkinteger(L, 5);
+    int y = luaL_checkinteger(L, 6);
     lua_pop(L, 4);
     bool ret = (*manager)->enter(L,entityId,aoi,x,y);
     lua_pushboolean(L, ret);
@@ -53,7 +54,8 @@ static int lleave(struct lua_State *L) {
 		return 0;
     }
     Manager **manager = check_grid_manager(L);
-    int entityId = lua_tointeger(L, 3);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    int entityId = luaL_checkinteger(L, 3);
     lua_pop(L, 1);
     bool ret = (*manager)->leave(L,entityId);
     lua_pushboolean(L, ret);
@@ -69,9 +71,10 @@ static int lmove(struct lua_State *L) {
 		return 0;
     }
     Manager **manager = check_grid_manager(L);
-    int entityId = lua_tointeger(L, 3);
-    int x = lua_tointeger(L, 4);
-    int y = lua_tointeger(L, 5);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    int entityId = luaL_checkinteger(L, 3);
+    int x = luaL_checkinteger(L, 4);
+    int y = luaL_checkinteger(L, 5);
     lua_pop(L, 3);
     bool ret = (*manager)->move(L,entityId,x,y);
     lua_pushboolean(L, ret);
@@ -87,7 +90,6 @@ static int lauto_gc(struct lua_State *L)
     }
 	return 0;
 }
-
 
 static const luaL_Reg lib_m[] = {
     {"enter", lenter},
