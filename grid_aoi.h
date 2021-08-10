@@ -3,6 +3,8 @@
 
 #include <list>
 #include <vector>
+#include <map>
+#include <lua.h>
 
 using namespace std;
 
@@ -19,24 +21,21 @@ typedef struct
 	int y;
 }Pos;
 
-//A为视野主体
-typedef void(*AOI_CB) (void *A, void *B);
-
 class Node 
 {
 	public:
-		void *entity;   //实体
+		int entityId;   //实体
 		float aoi;  	//视野半径
-		AOI_CB enter_cb;    //进入节点视野的回调
-		AOI_CB leave_cb;    //离开节点视野的回调
 		Pos pos;    	//节点所在x,y
 
-		Node(void *entity, float aoi, AOI_CB enter_cb, AOI_CB leave_cb);
+		Node(int entityId, float aoi);
 };
 
 
 typedef list<Node *> list_node;
 typedef list_node::iterator list_itor;
+
+typedef map<int, Node *> map_node;
 
 class Manager
 { 
@@ -44,13 +43,14 @@ class Manager
 		int xgrid_num;  //x轴的格子数
 		int ygrid_num;  //y轴的格子数
 		vector< vector<list_node> > grids;  //二维数组保存将地图xy轴切割后的格子
+		map_node nodes;	//所有的node节点
 	public:
 		Manager(size_t width, size_t length); 
 		~Manager();
 		
-		bool enter(Node *node, Pos *pos);
-		bool leave(Node *node);
-		bool move(Node *node, Pos *pos);
+		bool enter(lua_State *map, int entityId, int aoi, int x, int y);
+		bool leave(lua_State *map, int entityId);
+		bool move(lua_State *map, int entityId, int aoi, int x, int y);
 };
 
 #endif
