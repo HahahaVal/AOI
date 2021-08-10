@@ -26,10 +26,10 @@ class Node
 {
 	public:
 		void *entity;   //实体
-		float aoi;  //视野半径
+		float aoi;  	//视野半径
 		AOI_CB enter_cb;    //进入节点视野的回调
 		AOI_CB leave_cb;    //离开节点视野的回调
-		Pos pos;    //节点所在x,y
+		Pos pos;    	//节点所在x,y
 
 		Node(void *entity, float aoi, AOI_CB enter_cb, AOI_CB leave_cb);
 };
@@ -48,9 +48,9 @@ class Manager
 		Manager(size_t width, size_t length); 
 		~Manager();
 		
-		bool Enter(Node *node, Pos *pos);
-		bool Leave(Node *node);
-		bool Move(Node *node, Pos *pos);
+		bool enter(Node *node, Pos *pos);
+		bool leave(Node *node);
+		bool move(Node *node, Pos *pos);
 };
 
 #endif

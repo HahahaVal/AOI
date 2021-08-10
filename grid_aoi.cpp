@@ -1,5 +1,5 @@
 #include "grid_aoi.h"
-#include "stdio.h"
+#include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -63,7 +63,7 @@ Manager::Manager(size_t width, size_t length)
 	}
 }
 
-bool Manager::Enter(Node *node, Pos *pos)
+bool Manager::enter(Node *node, Pos *pos)
 {
 	if (node->pos.x != INVALID_X || node->pos.y != INVALID_Y) {
 		printf("node has enter some place:entity=%p,x=%d,y=%d", node->entity, node->pos.x, node->pos.y);
@@ -107,7 +107,7 @@ bool Manager::Enter(Node *node, Pos *pos)
 	return true;
 }
 
-bool Manager::Move(Node *node, Pos * pos)
+bool Manager::move(Node *node, Pos * pos)
 {
 	//原坐标
 	int oxgrid_num = node->pos.x/GRID_SIZE;
@@ -177,7 +177,7 @@ bool Manager::Move(Node *node, Pos * pos)
 	return true;
 }
 
-bool Manager::Leave(Node * node)
+bool Manager::leave(Node * node)
 {
 	Pos pos = node->pos;
 	if (pos.x == INVALID_X || pos.y == INVALID_Y) {

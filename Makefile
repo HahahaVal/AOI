@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-CFLAGS = -fPIC -shared
+CFLAGS = -std=c++11 -Wall -fPIC -shared -llua
 
 all: grid_aoi.o
 
