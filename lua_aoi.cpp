@@ -4,7 +4,7 @@
 
 using namespace std;
 
-#define check_grid_manager(L) (Manager *)luaL_checkudata(L, 1, "grid_manager")
+#define check_grid_manager(L) (Manager *)luaL_checkudata(L, 1, "Manager")
 
 static int new_manager(lua_State *L) {
     int width = lua_tointeger(L, 1);
@@ -14,8 +14,8 @@ static int new_manager(lua_State *L) {
     //通常，用来区别一个 userdata 类型与另外一个 userdata 类型的方法是为其创建一个特定的元表。
     //每当我们创建一个 userdata 的时候，我们就为其指定一个对应的 元表；每当我们获取一个 userdata 的时候，我们都要检查其是否拥有对应的 元表。
     //Lua 代码是无法修改 userdata 的元表，所以其无法欺骗这种检查。需要空间来存在这个新的 metatable，以便在创建 userdata 的时候能够访问它，同时用它来检查一个 userdata 是否有正确的类型。有两种可选的方法：1）存储在全局注册表；2）作为库函数中的 上值 存储
-    luaL_getmetatable(L, "grid_manager");
-    lua_setmetatable(L, -2);    //userdata.__index=grid_manager
+    luaL_getmetatable(L, "Manager");
+    lua_setmetatable(L, -2);    //userdata.__index=Manager
     return 1;
 }
 
@@ -67,7 +67,7 @@ extern int luaopen_grid_core(lua_State *L) {
 	}
 
     //LUA_REGISTRYINDEX全局注册表中, 注册一个key为className的metatable
-    if (!luaL_newmetatable(L, "grid_manager")) {
+    if (!luaL_newmetatable(L, "Manager")) {
         luaL_error(L, "关联元表失败\n");
     }
 
