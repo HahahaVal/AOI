@@ -2,11 +2,15 @@
 #include <lua.h>
 #include <lauxlib.h>
 
-using namespace std;
-
 #define check_grid_manager(L) (Manager *)luaL_checkudata(L, 1, "Manager")
 
 static int new_manager(lua_State *L) {
+    int num = lua_gettop(L);
+	if(num != 2)
+	{
+		printf("new_manager param number is not correct!");
+		return 0;
+    }
     int width = lua_tointeger(L, 1);
     int length = lua_tointeger(L, 2);
     Manager *manager = (Manager *) lua_newuserdata(L, sizeof(Manager));
@@ -20,30 +24,59 @@ static int new_manager(lua_State *L) {
 }
 //bool enter(lua_State *map, int entityId, int aoi, int x, int y);
 static int lenter(lua_State *L) {
+	int num = lua_gettop(L);
+	if(num != 5)
+	{
+		printf("lenter param number is not correct!");
+		return 0;
+    }
     Manager *manager = check_grid_manager(L);
-    bool ret = manager->enter(L);
+    int entityId = lua_tointeger(L, 2);
+    int aoi = lua_tointeger(L, 3);
+    int x = lua_tointeger(L, 4);
+    int y = lua_tointeger(L, 5);
+    bool ret = manager->enter(L,entityId,aoi,x,y);
     lua_pushboolean(L, ret);
-    return 1
+    return 1;
 }
 
+//bool leave(lua_State *map, int entityId);
 static int lleave(lua_State *L) {
-    Manager *p = check_grid_manager(L);
-    bool ret = manager->leave(L);
+    int num = lua_gettop(L);
+	if(num != 2)
+	{
+		printf("lleave param number is not correct!");
+		return 0;
+    }
+    Manager *manager = check_grid_manager(L);
+    int entityId = lua_tointeger(L, 2);
+    bool ret = manager->leave(L,entityId);
     lua_pushboolean(L, ret);
-     return 1
+    return 1;
 }
 
+//bool move(lua_State *map, int entityId, int aoi, int x, int y);
 static int lmove(lua_State *L) {
-    Manager *p = check_grid_manager(L);
-    bool ret = manager->move(L);
+    int num = lua_gettop(L);
+	if(num != 5)
+	{
+		printf("lmove param number is not correct!");
+		return 0;
+    }
+    Manager *manager = check_grid_manager(L);
+    int entityId = lua_tointeger(L, 2);
+    int aoi = lua_tointeger(L, 3);
+    int x = lua_tointeger(L, 4);
+    int y = lua_tointeger(L, 5);
+    bool ret = manager->move(L,entityId,aoi,x,y);
     lua_pushboolean(L, ret);
-     return 1
+    return 1;
 }
 
 static int lauto_gc(lua_State *L)
 {
-    Manager *p = check_grid_manager(L);
-    delete p;
+    Manager *manager = check_grid_manager(L);
+    delete manager;
 	return 0;
 }
 
@@ -60,8 +93,8 @@ static const luaL_Reg lib_f[] = {
     { NULL, NULL },
 };
 
-//require "grid_core"
-extern int luaopen_grid_core(lua_State *L) {
+//require "aoi"
+int luaopen_aoi(lua_State *L) {
     luaL_checkversion(L);
 
 	if(L == nullptr)
