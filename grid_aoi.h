@@ -1,10 +1,16 @@
 #ifndef __GRID_AOI_H_
 #define __GRID_AOI_H_
 
+extern "C" 
+{
+	#include "lua.h"
+	#include "lualib.h"
+	#include "lauxlib.h"
+}
+
 #include <list>
 #include <vector>
 #include <map>
-#include "lua.h"
 
 using namespace std;
 
