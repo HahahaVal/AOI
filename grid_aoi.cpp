@@ -20,20 +20,22 @@ Node::Node(int _entityId, float _aoi)
 inline int Min(int a, int b) { return (a<b ? a:b) ;}
 inline int Max(int a, int b) { return (a<b ? b:a) ;}
 
-inline void cb_enter(lua_State *map, int entityId1, int entityId2)
+inline void cb_enter(lua_State *L, int entityId1, int entityId2)
 {
-	lua_getglobal(map, "OnEnter");
-	lua_pushinteger(map, entityId1);
-	lua_pushinteger(map, entityId2);
-	lua_pcall(map,2,0,0);
+	lua_gettable(L, 2);
+	lua_getfield(L, -1, "OnEnter");
+	lua_pushinteger(L, entityId1);
+	lua_pushinteger(L, entityId2);
+	lua_pcall(L,2,0,0);
 }
 
-inline void cb_leave(lua_State *map, int entityId1, int entityId2)
+inline void cb_leave(lua_State *L, int entityId1, int entityId2)
 {
-	lua_getglobal(map, "OnLeave");
-	lua_pushinteger(map, entityId1);
-	lua_pushinteger(map, entityId2);
-	lua_pcall(map,2,0,0);
+	lua_gettable(L, 2);
+	lua_getfield(L, -1,  "OnLeave");
+	lua_pushinteger(L, entityId1);
+	lua_pushinteger(L, entityId2);
+	lua_pcall(L,2,0,0);
 }
 
 inline float Dis(Pos * pos1, Pos * pos2)
@@ -77,7 +79,7 @@ Manager::Manager(size_t width, size_t length)
 	}
 }
 
-bool Manager::enter(lua_State *map, int entityId, int aoi, int x, int y)
+bool Manager::enter(lua_State *L, int entityId, int aoi, int x, int y)
 {
 	Node *node = new Node(entityId, aoi);
 	if (node->pos.x != INVALID_X || node->pos.y != INVALID_Y) {
@@ -112,11 +114,11 @@ bool Manager::enter(lua_State *map, int entityId, int aoi, int x, int y)
 				Node * itv = *it;
 				//it进入node的视野
 				if (IsInAOI(&pos, &(itv->pos), node->aoi)) {
-					cb_enter(map, node->entityId, itv->entityId);
+					cb_enter(L, node->entityId, itv->entityId);
 				}
 				//node进入it的视野
 				if (IsInAOI(&(itv->pos), &pos, itv->aoi)) {
-					cb_enter(map, itv->entityId, node->entityId);
+					cb_enter(L, itv->entityId, node->entityId);
 				}
 			}
 		}
@@ -127,7 +129,7 @@ bool Manager::enter(lua_State *map, int entityId, int aoi, int x, int y)
 	return true;
 }
 
-bool Manager::move(lua_State *map, int entityId, int aoi, int x, int y)
+bool Manager::move(lua_State *L, int entityId, int aoi, int x, int y)
 {
 	Node *node = nodes[entityId];
 	if(node == nullptr)
@@ -185,20 +187,20 @@ bool Manager::move(lua_State *map, int entityId, int aoi, int x, int y)
 				assert(itv != node);
 				//老坐标在node视野内，新坐标不在node视野内
 				if (IsInAOI(&(oldpos), &(itv->pos), node->aoi) && !IsInAOI(&pos, &(itv->pos), node->aoi)) {
-					cb_leave(map, node->entityId, itv->entityId);
+					cb_leave(L, node->entityId, itv->entityId);
 				}
 				//老坐标不在node视野内，新坐标在视野内，it 进入 node的视野.
 				if (!IsInAOI(&(oldpos), &(itv->pos), node->aoi) && IsInAOI(&pos, &(itv->pos), node->aoi)) {
-					cb_enter(map, node->entityId, itv->entityId);
+					cb_enter(L, node->entityId, itv->entityId);
 				}
 
 				//老坐标在it视野内，新坐标不在it视野内
 				if (IsInAOI(&(itv->pos), &(oldpos), itv->aoi) && !IsInAOI(&(itv->pos), &pos, itv->aoi)) {
-					cb_leave(map, itv->entityId, node->entityId);
+					cb_leave(L, itv->entityId, node->entityId);
 				}
 				//老坐标不在it视野内，新坐标在it视野内
 				if (!IsInAOI(&(itv->pos), &(oldpos), itv->aoi) && IsInAOI(&(itv->pos), &pos, itv->aoi)) {
-					cb_enter(map, itv->entityId, node->entityId);
+					cb_enter(L, itv->entityId, node->entityId);
 				}
 			}
 		}
@@ -208,7 +210,7 @@ bool Manager::move(lua_State *map, int entityId, int aoi, int x, int y)
 	return true;
 }
 
-bool Manager::leave(lua_State *map, int entityId)
+bool Manager::leave(lua_State *L, int entityId)
 {
 	Node *node = nodes[entityId];
 	if(node == nullptr)
@@ -255,11 +257,11 @@ bool Manager::leave(lua_State *map, int entityId)
 				Node * itv = *it;
 				//it离开node的视野范围
 				if (IsInAOI(&(pos), &(itv->pos), node->aoi)) { 
-					cb_leave(map, node->entityId, itv->entityId);
+					cb_leave(L, node->entityId, itv->entityId);
 				}
 				//node离开it的视野范围
 				if (IsInAOI(&(itv->pos), &(pos), itv->aoi)) { 
-					cb_leave(map, itv->entityId, node->entityId);
+					cb_leave(L, itv->entityId, node->entityId);
 				}
 			}
 		}
