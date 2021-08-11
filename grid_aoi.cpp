@@ -132,7 +132,7 @@ bool Manager::enter(lua_State *L, int entityId, int aoi, int x, int y)
 bool Manager::move(lua_State *L, int entityId, int aoi, int x, int y)
 {
 	Node *node = nodes[entityId];
-	if(node == nullptr)
+	if(node == NULL)
 	{
 		printf("entity not exit:entityId=%d", node->entityId);
 		return false;
@@ -213,7 +213,7 @@ bool Manager::move(lua_State *L, int entityId, int aoi, int x, int y)
 bool Manager::leave(lua_State *L, int entityId)
 {
 	Node *node = nodes[entityId];
-	if(node == nullptr)
+	if(node == NULL)
 	{
 		printf("entity not exit:entityId=%d", node->entityId);
 		return false;

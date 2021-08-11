@@ -1,6 +1,9 @@
 #include "grid_aoi.h"
-#include <lua.h>
-#include <lauxlib.h>
+
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 
 #define check_grid_manager(L) (Manager *)luaL_checkudata(L, 1, "Manager")
 
@@ -97,7 +100,7 @@ static const luaL_Reg lib_f[] = {
 int luaopen_aoi(lua_State *L) {
     luaL_checkversion(L);
 
-	if(L == nullptr)
+	if(L == NULL)
 	{
 		return 1;
 	}
@@ -121,4 +124,6 @@ int luaopen_aoi(lua_State *L) {
 	luaL_newlib(L, lib_f);
 
     return 1;
+}
+
 }
