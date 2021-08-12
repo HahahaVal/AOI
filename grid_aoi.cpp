@@ -20,7 +20,7 @@ Node::Node(int _entityId, float _aoi)
 inline int Min(int a, int b) { return (a<b ? a:b) ;}
 inline int Max(int a, int b) { return (a<b ? b:a) ;}
 
-inline void cb_enter(lua_State *L, int entityId1, int entityId2)
+inline void cb_enter(struct lua_State *L, int entityId1, int entityId2)
 {
 	lua_gettable(L, 2);
 	lua_getfield(L, -1, "OnEnter");
@@ -29,7 +29,7 @@ inline void cb_enter(lua_State *L, int entityId1, int entityId2)
 	lua_pcall(L,2,0,0);
 }
 
-inline void cb_leave(lua_State *L, int entityId1, int entityId2)
+inline void cb_leave(struct lua_State *L, int entityId1, int entityId2)
 {
 	lua_gettable(L, 2);
 	lua_getfield(L, -1,  "OnLeave");
@@ -79,7 +79,7 @@ Manager::Manager(size_t width, size_t length)
 	}
 }
 
-bool Manager::enter(lua_State *L, int entityId, int aoi, int x, int y)
+bool Manager::enter(struct lua_State *L, int entityId, int aoi, int x, int y)
 {
 	Node *node = new Node(entityId, aoi);
 	if (node->pos.x != INVALID_X || node->pos.y != INVALID_Y) {
@@ -129,7 +129,7 @@ bool Manager::enter(lua_State *L, int entityId, int aoi, int x, int y)
 	return true;
 }
 
-bool Manager::move(lua_State *L, int entityId, int aoi, int x, int y)
+bool Manager::move(struct lua_State *L, int entityId, int aoi, int x, int y)
 {
 	Node *node = nodes[entityId];
 	if(node == NULL)
@@ -210,7 +210,7 @@ bool Manager::move(lua_State *L, int entityId, int aoi, int x, int y)
 	return true;
 }
 
-bool Manager::leave(lua_State *L, int entityId)
+bool Manager::leave(struct lua_State *L, int entityId)
 {
 	Node *node = nodes[entityId];
 	if(node == NULL)

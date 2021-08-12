@@ -52,11 +52,11 @@ class Manager
 		map_node nodes;	//所有的node节点
 	public:
 		Manager(size_t width, size_t length); 
-		~Manager();
+		~Manager(){};
 		
-		bool enter(lua_State *map, int entityId, int aoi, int x, int y);
-		bool leave(lua_State *map, int entityId);
-		bool move(lua_State *map, int entityId, int aoi, int x, int y);
+		bool enter(struct lua_State *map, int entityId, int aoi, int x, int y);
+		bool leave(struct lua_State *map, int entityId);
+		bool move(struct lua_State *map, int entityId, int aoi, int x, int y);
 };
 
 #endif

@@ -1,13 +1,13 @@
 #include "grid_aoi.h"
 
 extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+    int luaopen_aoi(struct lua_State *L);
+
+}
 
 #define check_grid_manager(L) (Manager *)luaL_checkudata(L, 1, "Manager")
 
-static int new_manager(lua_State *L) {
+static int new_manager(struct lua_State *L) {
     int num = lua_gettop(L);
 	if(num != 2)
 	{
@@ -25,8 +25,8 @@ static int new_manager(lua_State *L) {
     lua_setmetatable(L, -2);    //userdata.__index=Manager
     return 1;
 }
-//bool enter(lua_State *map, int entityId, int aoi, int x, int y);
-static int lenter(lua_State *L) {
+//bool enter(struct lua_State *map, int entityId, int aoi, int x, int y);
+static int lenter(struct lua_State *L) {
 	int num = lua_gettop(L);
 	if(num != 5)
 	{
@@ -44,7 +44,7 @@ static int lenter(lua_State *L) {
 }
 
 //bool leave(lua_State *map, int entityId);
-static int lleave(lua_State *L) {
+static int lleave(struct lua_State *L) {
     int num = lua_gettop(L);
 	if(num != 2)
 	{
@@ -59,7 +59,7 @@ static int lleave(lua_State *L) {
 }
 
 //bool move(lua_State *map, int entityId, int aoi, int x, int y);
-static int lmove(lua_State *L) {
+static int lmove(struct lua_State *L) {
     int num = lua_gettop(L);
 	if(num != 5)
 	{
@@ -76,7 +76,7 @@ static int lmove(lua_State *L) {
     return 1;
 }
 
-static int lauto_gc(lua_State *L)
+static int lauto_gc(struct lua_State *L)
 {
     Manager *manager = check_grid_manager(L);
     delete manager;
@@ -97,7 +97,7 @@ static const luaL_Reg lib_f[] = {
 };
 
 //require "aoi"
-int luaopen_aoi(lua_State *L) {
+int luaopen_aoi(struct lua_State *L) {
     luaL_checkversion(L);
 
 	if(L == NULL)
@@ -124,6 +124,4 @@ int luaopen_aoi(lua_State *L) {
 	luaL_newlib(L, lib_f);
 
     return 1;
-}
-
 }
