@@ -2,7 +2,7 @@
 
 CFLAGS ?= -g -O2 -Wall -fPIC -shared
 
-LUA_INC ?= ./lua-5.3.4/src
+LUA_INC ?= ./lua-5.4.2
 
 all:aoi.so
 
