@@ -11,7 +11,7 @@ static int new_manager(struct lua_State *L) {
     int num = lua_gettop(L);
 	if(num != 2)
 	{
-		printf("new_manager param number is not correct!");
+		luaL_error(L, "new_manager param number is not correct!");
 		return 0;
     }
     int width = lua_tointeger(L, 1);
@@ -28,16 +28,16 @@ static int new_manager(struct lua_State *L) {
 //bool enter(struct lua_State *map, int entityId, int aoi, int x, int y);
 static int lenter(struct lua_State *L) {
 	int num = lua_gettop(L);
-	if(num != 5)
+	if(num != 6)
 	{
-		printf("lenter param number is not correct!");
+		luaL_error(L, "lenter param number is not correct!");
 		return 0;
     }
     Manager *manager = check_grid_manager(L);
-    int entityId = lua_tointeger(L, 2);
-    int aoi = lua_tointeger(L, 3);
-    int x = lua_tointeger(L, 4);
-    int y = lua_tointeger(L, 5);
+    int entityId = lua_tointeger(L, 3);
+    int aoi = lua_tointeger(L, 4);
+    int x = lua_tointeger(L, 5);
+    int y = lua_tointeger(L, 6);
     bool ret = manager->enter(L,entityId,aoi,x,y);
     lua_pushboolean(L, ret);
     return 1;
@@ -48,7 +48,7 @@ static int lleave(struct lua_State *L) {
     int num = lua_gettop(L);
 	if(num != 2)
 	{
-		printf("lleave param number is not correct!");
+		luaL_error(L, "lleave param number is not correct!");
 		return 0;
     }
     Manager *manager = check_grid_manager(L);
@@ -63,7 +63,7 @@ static int lmove(struct lua_State *L) {
     int num = lua_gettop(L);
 	if(num != 5)
 	{
-		printf("lmove param number is not correct!");
+		luaL_error(L, "lmove param number is not correct!");
 		return 0;
     }
     Manager *manager = check_grid_manager(L);
@@ -79,7 +79,11 @@ static int lmove(struct lua_State *L) {
 static int lauto_gc(struct lua_State *L)
 {
     Manager *manager = check_grid_manager(L);
-    delete manager;
+    if (manager)
+    {
+        delete manager;
+    }
+    
 	return 0;
 }
 
