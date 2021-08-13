@@ -2,11 +2,19 @@
 
 CFLAGS ?= -g -O2 -Wall -fPIC -shared
 
-LUA_INC ?= ./lua-5.4.2
+LUA_PATH ?= ./lua-5.4.2
+INCLUDE_PATH ?= -I$(LUA_PATH)
 
 all:aoi.so
 
-aoi.so:lua_aoi.cpp
-	g++ $(CFLAGS) lua_aoi.cpp grid_aoi.cpp -o aoi.so -I$(LUA_INC) 
+%.o:%.cpp
+	g++ $(CFLAGS) $(INCLUDE_PATH) -o $@ -c $^
+
+aoi.so:lua_aoi.o grid_aoi.o
+	g++ $(CFLAGS) $(INCLUDE_PATH) $^ -o $@ 
+
+test: test.o
+	g++ -g -O2 -Wall $(INCLUDE_PATH) $^ -o $@
+
 clean:
-	-rm -rf *.o *.so 
+	-rm -rf *.o *.so
