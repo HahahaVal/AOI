@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all clean test
 
 CFLAGS ?= -g -O2 -Wall -fPIC -shared
 
@@ -11,10 +11,10 @@ all:aoi.so
 	g++ $(CFLAGS) $(INCLUDE_PATH) -o $@ -c $^
 
 aoi.so:lua_aoi.o grid_aoi.o
-	g++ $(CFLAGS) $(INCLUDE_PATH) $^ -o $@ 
+	g++ $(CFLAGS) $(INCLUDE_PATH) $^ -o $@
 
-test: test.o
-	g++ -g -O2 -Wall $(INCLUDE_PATH) $^ -o $@
+test: test.o grid_aoi.o
+	g++ -g -O2 -Wall $(INCLUDE_PATH) $^ -o $@ -llua -ldl
 
 clean:
 	-rm -rf *.o *.so
