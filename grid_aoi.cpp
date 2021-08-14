@@ -22,7 +22,6 @@ inline int Max(int a, int b) { return (a < b ? b : a); }
 
 inline void cb_enter(struct lua_State *L, int entityId1, int entityId2)
 {
-	lua_gettable(L, 2);
 	lua_getfield(L, -1, "OnEnter");
 	lua_pushinteger(L, entityId1);
 	lua_pushinteger(L, entityId2);
@@ -31,7 +30,6 @@ inline void cb_enter(struct lua_State *L, int entityId1, int entityId2)
 
 inline void cb_leave(struct lua_State *L, int entityId1, int entityId2)
 {
-	lua_gettable(L, 2);
 	lua_getfield(L, -1, "OnLeave");
 	lua_pushinteger(L, entityId1);
 	lua_pushinteger(L, entityId2);
@@ -72,7 +70,6 @@ Manager::Manager(size_t width, size_t length)
 		printf("length too huge:%d limited:%d", ygrid_num, MAX_LEN);
 		ygrid_num = MAX_LEN;
 	}
-
 	grids.resize(xgrid_num + 1);
 	for (unsigned int i = 0; i < grids.size(); i++) {
 		grids[i].resize(ygrid_num + 1);
@@ -81,15 +78,16 @@ Manager::Manager(size_t width, size_t length)
 
 bool Manager::enter(struct lua_State *L, int entityId, int aoi, int x, int y)
 {
+	luaL_error(L, "~~~~~~~~~~%d,%d",xgrid_num,ygrid_num);
 	Node *node = new Node(entityId, aoi);
 	if (node->pos.x != INVALID_X || node->pos.y != INVALID_Y) {
-		printf("node has enter some place:entityId=%d,x=%d,y=%d", node->entityId, node->pos.x, node->pos.y);
+		luaL_error(L, "node has enter some place:entityId=%d,x=%d,y=%d", node->entityId, node->pos.x, node->pos.y);
 		return false;
 	}
 	int nxgrid_num = x / GRID_SIZE;
 	int nygrid_num = y / GRID_SIZE;
 	if ((nxgrid_num<0 || nxgrid_num>xgrid_num) || (nygrid_num<0 || nygrid_num>ygrid_num)) {
-		printf("enter pos is not valid:entityId=%d,x=%d,y=%d", node->entityId, x, y);
+		luaL_error(L, "enter pos is not valid:entityId=%d,x=%d,y=%d", node->entityId, x, y);
 		return false;
 	}
 
@@ -134,7 +132,7 @@ bool Manager::move(struct lua_State *L, int entityId, int x, int y)
 	Node *node = nodes[entityId];
 	if (node == NULL)
 	{
-		printf("entity not exit:entityId=%d", node->entityId);
+		luaL_error(L, "entity not exit:entityId=%d", node->entityId);
 		return false;
 	}
 
@@ -145,7 +143,7 @@ bool Manager::move(struct lua_State *L, int entityId, int x, int y)
 	int nxgrid_num = x / GRID_SIZE;
 	int nygrid_num = y / GRID_SIZE;
 	if ((nxgrid_num<0 || nxgrid_num>xgrid_num) || (nygrid_num<0 || nygrid_num>ygrid_num)) {
-		printf("pos is not valid:entityId=%d,x=%d,y=%d", node->entityId, x, y);
+		luaL_error(L, "pos is not valid:entityId=%d,x=%d,y=%d", node->entityId, x, y);
 		return false;
 	}
 
@@ -215,13 +213,13 @@ bool Manager::leave(struct lua_State *L, int entityId)
 	Node *node = nodes[entityId];
 	if (node == NULL)
 	{
-		printf("entity not exit:entityId=%d", node->entityId);
+		luaL_error(L, "entity not exit:entityId=%d", node->entityId);
 		return false;
 	}
 
 	Pos pos = node->pos;
 	if (pos.x == INVALID_X || pos.y == INVALID_Y) {
-		printf("node has gone away:entityId=%d, pos.x=%d, pos.y=%d", node->entityId, pos.x, pos.y);
+		luaL_error(L, "node has gone away:entityId=%d, pos.x=%d, pos.y=%d", node->entityId, pos.x, pos.y);
 		return false;
 	}
 	int nxgrid_num = pos.x / GRID_SIZE;

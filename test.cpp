@@ -24,6 +24,7 @@ int main(int argc, char* argv[])
 
 	manager->leave(L, 1);
 	manager->leave(L, 2);
+	delete manager;
 
 	return 1;
 }

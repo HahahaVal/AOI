@@ -5,7 +5,7 @@ CFLAGS ?= -g -O2 -Wall -fPIC -shared
 LUA_PATH ?= ./lua-5.4.2
 INCLUDE_PATH ?= -I$(LUA_PATH)
 
-all:aoi.so
+all:aoi.so test
 
 %.o:%.cpp
 	g++ $(CFLAGS) $(INCLUDE_PATH) -o $@ -c $^
