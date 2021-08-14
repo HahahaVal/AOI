@@ -2,12 +2,12 @@ local aoi = require "aoi"
 
 local map = {}
 
-function map.OnEnter(entityId1, entityId2)
-    print("~~~~~~~~~~~~~~~EEEEE",entityId1, entityId2)
+function map:OnEnter(entityId1, entityId2)
+    print("~~~~~~~~~~~~~~~EEEEE", self, entityId1, entityId2)
 end
 
-function map.OnLeave(entityId1, entityId2)
-    print("~~~~~~~~~~~~~~~LLLLL",entityId1, entityId2)
+function map:OnLeave(entityId1, entityId2)
+    print("~~~~~~~~~~~~~~~LLLLL", self, entityId1, entityId2)
 end
 
 local M = {}

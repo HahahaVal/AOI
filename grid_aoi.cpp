@@ -23,17 +23,19 @@ inline int Max(int a, int b) { return (a < b ? b : a); }
 inline void cb_enter(struct lua_State *L, int entityId1, int entityId2)
 {
 	lua_getfield(L, -1, "OnEnter");
+	lua_pushvalue(L, -2);
 	lua_pushinteger(L, entityId1);
 	lua_pushinteger(L, entityId2);
-	lua_pcall(L, 2, 0, 0);
+	lua_call(L, 3, 0);
 }
 
 inline void cb_leave(struct lua_State *L, int entityId1, int entityId2)
 {
 	lua_getfield(L, -1, "OnLeave");
+	lua_pushvalue(L, -2);
 	lua_pushinteger(L, entityId1);
 	lua_pushinteger(L, entityId2);
-	lua_pcall(L, 2, 0, 0);
+	lua_call(L, 3, 0);
 }
 
 inline float Dis(Pos * pos1, Pos * pos2)
