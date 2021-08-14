@@ -54,8 +54,8 @@ static int lleave(struct lua_State *L) {
     }
     Manager **manager = check_grid_manager(L);
     int entityId = lua_tointeger(L, 3);
-    bool ret = (*manager)->leave(L,entityId);
     lua_pop(L, 1);
+    bool ret = (*manager)->leave(L,entityId);
     lua_pushboolean(L, ret);
     return 1;
 }
@@ -85,7 +85,6 @@ static int lauto_gc(struct lua_State *L)
     {
         delete *manager;
     }
-    
 	return 0;
 }
 

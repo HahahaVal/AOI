@@ -78,7 +78,6 @@ Manager::Manager(size_t width, size_t length)
 
 bool Manager::enter(struct lua_State *L, int entityId, int aoi, int x, int y)
 {
-	luaL_error(L, "~~~~~~~~~~%d,%d",xgrid_num,ygrid_num);
 	Node *node = new Node(entityId, aoi);
 	if (node->pos.x != INVALID_X || node->pos.y != INVALID_Y) {
 		luaL_error(L, "node has enter some place:entityId=%d,x=%d,y=%d", node->entityId, node->pos.x, node->pos.y);
@@ -264,5 +263,7 @@ bool Manager::leave(struct lua_State *L, int entityId)
 			}
 		}
 	}
+	nodes[entityId] = NULL;
+	delete node;
 	return true;
 }
