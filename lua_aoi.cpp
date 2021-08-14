@@ -5,7 +5,7 @@ extern "C" {
 
 }
 
-#define check_grid_manager(L) (Manager *)luaL_checkudata(L, 1, "Manager")
+#define check_grid_manager(L) (Manager **)luaL_checkudata(L, 1, "Manager")
 
 static int new_manager(struct lua_State *L) {
     int num = lua_gettop(L);
@@ -16,8 +16,8 @@ static int new_manager(struct lua_State *L) {
     }
     int width = lua_tointeger(L, 1);
     int length = lua_tointeger(L, 2);
-    Manager *manager = (Manager *) lua_newuserdata(L, sizeof(Manager));
-    manager = new Manager(width, length);
+    Manager **manager = (Manager **) lua_newuserdata(L, sizeof(Manager *));
+    *manager = new Manager(width, length);
     //通常，用来区别一个 userdata 类型与另外一个 userdata 类型的方法是为其创建一个特定的元表。
     //每当我们创建一个 userdata 的时候，我们就为其指定一个对应的 元表；每当我们获取一个 userdata 的时候，我们都要检查其是否拥有对应的 元表。
     //Lua 代码是无法修改 userdata 的元表，所以其无法欺骗这种检查。需要空间来存在这个新的 metatable，以便在创建 userdata 的时候能够访问它，同时用它来检查一个 userdata 是否有正确的类型。有两种可选的方法：1）存储在全局注册表；2）作为库函数中的 上值 存储
@@ -33,13 +33,13 @@ static int lenter(struct lua_State *L) {
 		luaL_error(L, "lenter param number is not correct!");
 		return 0;
     }
-    Manager *manager = check_grid_manager(L);
+    Manager **manager = check_grid_manager(L);
     int entityId = lua_tointeger(L, 3);
     int aoi = lua_tointeger(L, 4);
     int x = lua_tointeger(L, 5);
     int y = lua_tointeger(L, 6);
     lua_pop(L, 4);
-    bool ret = manager->enter(L,entityId,aoi,x,y);
+    bool ret = (*manager)->enter(L,entityId,aoi,x,y);
     lua_pushboolean(L, ret);
     return 1;
 }
@@ -52,9 +52,9 @@ static int lleave(struct lua_State *L) {
 		luaL_error(L, "lleave param number is not correct!");
 		return 0;
     }
-    Manager *manager = check_grid_manager(L);
+    Manager **manager = check_grid_manager(L);
     int entityId = lua_tointeger(L, 3);
-    bool ret = manager->leave(L,entityId);
+    bool ret = (*manager)->leave(L,entityId);
     lua_pop(L, 1);
     lua_pushboolean(L, ret);
     return 1;
@@ -68,22 +68,22 @@ static int lmove(struct lua_State *L) {
 		luaL_error(L, "lmove param number is not correct!");
 		return 0;
     }
-    Manager *manager = check_grid_manager(L);
+    Manager **manager = check_grid_manager(L);
     int entityId = lua_tointeger(L, 3);
     int x = lua_tointeger(L, 4);
     int y = lua_tointeger(L, 5);
     lua_pop(L, 3);
-    bool ret = manager->move(L,entityId,x,y);
+    bool ret = (*manager)->move(L,entityId,x,y);
     lua_pushboolean(L, ret);
     return 1;
 }
 
 static int lauto_gc(struct lua_State *L)
 {
-    Manager *manager = check_grid_manager(L);
-    if (manager)
+    Manager **manager = check_grid_manager(L);
+    if (*manager)
     {
-        delete manager;
+        delete *manager;
     }
     
 	return 0;
