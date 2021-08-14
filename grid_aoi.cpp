@@ -151,7 +151,7 @@ bool Manager::move(struct lua_State *L, int entityId, int x, int y)
 
 	//删除节点
 	bool del_ret = false;
-	list_node list = grids[oxgrid_num][oygrid_num];
+	list_node &list = grids[oxgrid_num][oygrid_num];
 	for (list_itor it = list.begin(); it != list.end(); ++it) {
 		if (*it == node) {
 			list.erase(it);
@@ -229,7 +229,7 @@ bool Manager::leave(struct lua_State *L, int entityId)
 
 	//删除节点
 	bool del_ret = false;
-	list_node list = grids[nxgrid_num][nygrid_num];
+	list_node &list = grids[nxgrid_num][nygrid_num];
 	for (list_itor it = list.begin(); it != list.end(); ++it) {
 		if (*it == node) {
 			list.erase(it);
@@ -243,7 +243,7 @@ bool Manager::leave(struct lua_State *L, int entityId)
 
 	//x直径为3
 	int xl_index = (nxgrid_num - 1 < 0) ? 0 : (nxgrid_num - 1);
-	int xr_index = (nxgrid_num + 1 > xgrid_num) ? xgrid_num : (xgrid_num + 1);
+	int xr_index = (nxgrid_num + 1 > xgrid_num) ? xgrid_num : (nxgrid_num + 1);
 
 	//y直径为3
 	int yl_index = (nygrid_num - 1 < 0) ? 0 : (nygrid_num - 1);
