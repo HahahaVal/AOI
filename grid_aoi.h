@@ -56,7 +56,7 @@ class Manager
 		
 		bool enter(struct lua_State *map, int entityId, int aoi, int x, int y);
 		bool leave(struct lua_State *map, int entityId);
-		bool move(struct lua_State *map, int entityId, int aoi, int x, int y);
+		bool move(struct lua_State *map, int entityId, int x, int y);
 };
 
 #endif

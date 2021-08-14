@@ -46,7 +46,7 @@ static int lenter(struct lua_State *L) {
 //bool leave(lua_State *map, int entityId);
 static int lleave(struct lua_State *L) {
     int num = lua_gettop(L);
-	if(num != 2)
+	if(num != 3)
 	{
 		luaL_error(L, "lleave param number is not correct!");
 		return 0;
@@ -58,7 +58,7 @@ static int lleave(struct lua_State *L) {
     return 1;
 }
 
-//bool move(lua_State *map, int entityId, int aoi, int x, int y);
+//bool move(lua_State *map, int entityId, int x, int y);
 static int lmove(struct lua_State *L) {
     int num = lua_gettop(L);
 	if(num != 5)
@@ -68,10 +68,9 @@ static int lmove(struct lua_State *L) {
     }
     Manager *manager = check_grid_manager(L);
     int entityId = lua_tointeger(L, 2);
-    int aoi = lua_tointeger(L, 3);
-    int x = lua_tointeger(L, 4);
-    int y = lua_tointeger(L, 5);
-    bool ret = manager->move(L,entityId,aoi,x,y);
+    int x = lua_tointeger(L, 3);
+    int y = lua_tointeger(L, 4);
+    bool ret = manager->move(L,entityId,x,y);
     lua_pushboolean(L, ret);
     return 1;
 }
