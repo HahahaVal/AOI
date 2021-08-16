@@ -13,10 +13,10 @@ end
 local M = {}
 
 M.manager = aoi.new(300,300)
-M.manager:enter(map, 1, 2, 3, 4)
+M.manager:enter(map, 1, 2.1, 3.1, 4.1)
 M.manager:enter(map, 2, 2, 3, 4)
 
-M.manager:move(map, 1, 3, 100)
+M.manager:move(map, 1, 3.2, 100.2)
 M.manager:move(map, 2, 3, 100)
 
 M.manager:leave(map, 1)

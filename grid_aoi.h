@@ -23,8 +23,8 @@ using namespace std;
 
 typedef struct
 {
-	int x;
-	int y;
+	float x;
+	float y;
 }Pos;
 
 class Node 
@@ -54,9 +54,9 @@ class Manager
 		Manager(size_t width, size_t length); 
 		~Manager(){};
 		
-		bool enter(struct lua_State *map, int entityId, int aoi, int x, int y);
+		bool enter(struct lua_State *map, int entityId, float aoi, float x, float y);
 		bool leave(struct lua_State *map, int entityId);
-		bool move(struct lua_State *map, int entityId, int x, int y);
+		bool move(struct lua_State *map, int entityId, float x, float y);
 };
 
 #endif

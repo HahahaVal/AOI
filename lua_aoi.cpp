@@ -36,9 +36,9 @@ static int lenter(struct lua_State *L) {
     Manager **manager = check_grid_manager(L);
     luaL_checktype(L, 2, LUA_TTABLE);
     int entityId = luaL_checkinteger(L, 3);
-    int aoi = luaL_checkinteger(L, 4);
-    int x = luaL_checkinteger(L, 5);
-    int y = luaL_checkinteger(L, 6);
+    float aoi = luaL_checknumber(L, 4);
+    float x = luaL_checknumber(L, 5);
+    float y = luaL_checknumber(L, 6);
     lua_pop(L, 4);
     bool ret = (*manager)->enter(L,entityId,aoi,x,y);
     lua_pushboolean(L, ret);
@@ -73,8 +73,8 @@ static int lmove(struct lua_State *L) {
     Manager **manager = check_grid_manager(L);
     luaL_checktype(L, 2, LUA_TTABLE);
     int entityId = luaL_checkinteger(L, 3);
-    int x = luaL_checkinteger(L, 4);
-    int y = luaL_checkinteger(L, 5);
+    float x = luaL_checknumber(L, 4);
+    float y = luaL_checknumber(L, 5);
     lua_pop(L, 3);
     bool ret = (*manager)->move(L,entityId,x,y);
     lua_pushboolean(L, ret);
