@@ -61,8 +61,11 @@ inline bool IsInAOI(Pos *pos1, Pos *pos2, float aoi)
 	return false;
 }
 
-Manager::Manager(size_t width, size_t length)
-{
+Manager::Manager(size_t _width, size_t _length)
+{	
+	width = _width;
+	length = _length;
+
 	xgrid_num = width / GRID_SIZE;
 	ygrid_num = length / GRID_SIZE;
 	if (xgrid_num > MAX_LEN) {
@@ -79,6 +82,10 @@ Manager::Manager(size_t width, size_t length)
 
 bool Manager::enter(struct lua_State *L, int entityId, float aoi, float x, float y)
 {
+	//转换坐标系从左侧开始
+	x = x + width/2;
+	y = y + length/2;
+
 	Node *node = new Node(entityId, aoi);
 	if (node->pos.x != INVALID_X || node->pos.y != INVALID_Y) {
 		luaL_error(L, "node has enter some place:entityId=%d,x=%f,y=%f", node->entityId, node->pos.x, node->pos.y);
@@ -129,6 +136,10 @@ bool Manager::enter(struct lua_State *L, int entityId, float aoi, float x, float
 
 bool Manager::move(struct lua_State *L, int entityId, float x, float y)
 {
+	//转换坐标系从左侧开始
+	x = x + width/2;
+	y = y + length/2;
+
 	Node *node = nodes[entityId];
 	if (node == NULL)
 	{

@@ -46,6 +46,8 @@ typedef map<int, Node *> map_node;
 class Manager
 { 
 	private:
+		int width;		//宽度
+		int length;		//长度
 		int xgrid_num;  //x轴的格子数
 		int ygrid_num;  //y轴的格子数
 		vector< vector<list_node> > grids;  //二维数组保存将地图xy轴切割后的格子

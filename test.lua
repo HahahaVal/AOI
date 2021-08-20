@@ -12,12 +12,27 @@ end
 
 local M = {}
 
-M.manager = aoi.new(300,300)
-M.manager:enter(map, 1, 2.1, 3.1, 4.1)
-M.manager:enter(map, 2, 2, 3, 4)
+for i=1000, 1, -1 do
+    M.manager = aoi.new(300,300)
+    local random_aoi = math.random(1,150)
+    local random_x = math.random(1,150)
+    local random_y = math.random(1,150)
+    M.manager:enter(map, i, random_aoi, random_x, random_y)
 
-M.manager:move(map, 1, 3.2, 100.2)
-M.manager:move(map, 2, 3, 100)
+    local random_aoi = math.random(1,100)
+    local random_x = math.random(1,150)
+    local random_y = math.random(1,150)
+    M.manager:enter(map, i+1, random_aoi, random_x, random_y)
 
-M.manager:leave(map, 1)
-M.manager:leave(map, 2)
+    local random_x = math.random(1,150)
+    local random_y = math.random(1,150)
+    M.manager:move(map, i, random_x, random_y)
+    local random_x = math.random(1,150)
+    local random_y = math.random(1,150)
+    M.manager:move(map, i+1, random_x, random_y)
+
+    M.manager:leave(map, i)
+    M.manager:leave(map, i+1)
+end
+
+
