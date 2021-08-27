@@ -143,7 +143,7 @@ bool Manager::move(struct lua_State *L, int entityId, float x, float y)
 	Node *node = nodes[entityId];
 	if (node == NULL)
 	{
-		luaL_error(L, "entity not exit:entityId=%d", node->entityId);
+		luaL_error(L, "entity not exit:entityId=%d", entityId);
 		return false;
 	}
 
@@ -224,7 +224,7 @@ bool Manager::leave(struct lua_State *L, int entityId)
 	Node *node = nodes[entityId];
 	if (node == NULL)
 	{
-		luaL_error(L, "entity not exit:entityId=%d", node->entityId);
+		luaL_error(L, "entity not exit:entityId=%d", entityId);
 		return false;
 	}
 

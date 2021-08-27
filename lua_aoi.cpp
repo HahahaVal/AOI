@@ -2,7 +2,6 @@
 
 extern "C" {
     int luaopen_aoi(struct lua_State *L);
-
 }
 
 #define check_grid_manager(L) (Manager **)luaL_checkudata(L, 1, "Manager")
