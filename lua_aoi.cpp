@@ -24,7 +24,7 @@ static int new_manager(struct lua_State *L) {
     lua_setmetatable(L, -2);    //userdata.__index=Manager
     return 1;
 }
-//bool enter(struct lua_State *map, int entityId, int aoi, int x, int y);
+//manager:enter(map, entityId, aoi, x, y)
 static int lenter(struct lua_State *L) {
 	int num = lua_gettop(L);
 	if(num != 6)
@@ -44,7 +44,7 @@ static int lenter(struct lua_State *L) {
     return 1;
 }
 
-//bool leave(lua_State *map, int entityId);
+//manager:leave(map, entityId)
 static int lleave(struct lua_State *L) {
     int num = lua_gettop(L);
 	if(num != 3)
@@ -61,7 +61,7 @@ static int lleave(struct lua_State *L) {
     return 1;
 }
 
-//bool move(lua_State *map, int entityId, int x, int y);
+//manager:move(map, entityId, x, y)
 static int lmove(struct lua_State *L) {
     int num = lua_gettop(L);
 	if(num != 5)
@@ -80,6 +80,32 @@ static int lmove(struct lua_State *L) {
     return 1;
 }
 
+//manager:find_entitys(x, y, radius)
+static int lfind_entitys(struct lua_State *L) {
+    int num = lua_gettop(L);
+	if(num != 4)
+	{
+		luaL_error(L, "lfind_entitys param number is not correct!");
+		return 0;
+    }
+    Manager **manager = check_grid_manager(L);
+    float x = luaL_checknumber(L, 2);
+    float y = luaL_checknumber(L, 3);
+    float radius = luaL_checknumber(L, 4);
+    lua_pop(L, 3);
+    vector<int> entitys = (*manager)->find_entitys(x,y,radius);
+
+    lua_newtable(L);
+    for (size_t i = 0; i < entitys.size(); i++)
+    {
+        lua_pushnumber(L, i+1);
+        int entityId = entitys[i];
+        lua_pushnumber(L, entityId);
+        lua_settable(L, -3);
+    }
+    return 1;
+}
+
 static int lauto_gc(struct lua_State *L)
 {
     Manager **manager = check_grid_manager(L);
@@ -94,6 +120,7 @@ static const luaL_Reg lib_m[] = {
     {"enter", lenter},
     {"leave", lleave},
     {"move", lmove},
+    {"find_entitys", lfind_entitys},
     { NULL, NULL },
 };
 

@@ -279,3 +279,39 @@ bool Manager::leave(struct lua_State *L, int entityId)
 	delete node;
 	return true;
 }
+
+vector<int> Manager::find_entitys(float x, float y, float radius)
+{
+	//转换坐标系从左侧开始
+	x = x + width/2;
+	y = y + length/2;
+
+	int xr = Min(width, x+radius);
+	int xl = Max(0, x-radius);
+
+	int ty = Min(length, y+radius);
+	int by = Max(0, y-radius);
+
+	//目标index
+	int xrgrid_num = xr / GRID_SIZE;
+	int xlgrid_num = xl / GRID_SIZE;
+
+	int tygrid_num = ty / GRID_SIZE;
+	int bygrid_num = by / GRID_SIZE;
+	
+	vector<int> entitys;
+	//遍历半径内的格子
+	for (int i = xlgrid_num; i <= xrgrid_num; i++) {
+		for (int j = bygrid_num; j <= tygrid_num; j++) {
+			list_node list = grids[i][j];
+			for (list_itor it = list.begin(); it != list.end(); ++it) {
+				Node * itv = *it;
+				if(fabs(itv->pos.x - x) >= radius or fabs(itv->pos.y - y) >= radius)
+				{
+					entitys.push_back(itv->entityId);
+				}	
+			}
+		}
+	}
+	return entitys;
+}

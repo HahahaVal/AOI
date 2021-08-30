@@ -59,6 +59,7 @@ class Manager
 		bool enter(struct lua_State *map, int entityId, float aoi, float x, float y);
 		bool leave(struct lua_State *map, int entityId);
 		bool move(struct lua_State *map, int entityId, float x, float y);
+		vector<int> find_entitys(float x, float y, float radius);
 };
 
 #endif
