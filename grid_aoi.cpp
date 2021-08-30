@@ -306,7 +306,7 @@ vector<int> Manager::find_entitys(float x, float y, float radius)
 			list_node list = grids[i][j];
 			for (list_itor it = list.begin(); it != list.end(); ++it) {
 				Node * itv = *it;
-				if(fabs(itv->pos.x - x) >= radius or fabs(itv->pos.y - y) >= radius)
+				if(fabs(itv->pos.x - x) <= radius or fabs(itv->pos.y - y) <= radius)
 				{
 					entitys.push_back(itv->entityId);
 				}	
