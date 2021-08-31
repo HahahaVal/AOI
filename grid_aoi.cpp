@@ -300,13 +300,16 @@ vector<int> Manager::find_entitys(float x, float y, float radius)
 	int bygrid_num = by / GRID_SIZE;
 	
 	vector<int> entitys;
+	Pos pos;
+	pos.x = x;
+	pos.y = y;
 	//遍历半径内的格子
 	for (int i = xlgrid_num; i <= xrgrid_num; i++) {
 		for (int j = bygrid_num; j <= tygrid_num; j++) {
 			list_node list = grids[i][j];
 			for (list_itor it = list.begin(); it != list.end(); ++it) {
 				Node * itv = *it;
-				if(fabs(itv->pos.x - x) <= radius or fabs(itv->pos.y - y) <= radius)
+				if (IsInAOI(&pos, &(itv->pos), radius))
 				{
 					entitys.push_back(itv->entityId);
 				}	

@@ -63,3 +63,11 @@ end
 for i=100, 1, -1 do
     M.manager:leave(map, i)
 end
+
+
+M.manager:enter(map, 1, 1, -63.2, -77.3)
+
+local ret = M.manager:find_entitys(-63.71772, -72.64935, 2)
+print("~~~~~~~~~~~~~~FFFFF",#ret)
+
+M.manager:leave(map, 1)
