@@ -4,14 +4,12 @@
 #include <stdlib.h>
 #include <assert.h>
 
-Node::Node(int _entityId, float _aoi)
+Node::Node(int _entityId, float _aoi):entityId(_entityId),aoi(_aoi)
 {
-	entityId = _entityId;
-	aoi = _aoi;
-	if (aoi > MAX_AOI) {
+	if (aoi > MAX_AOI)
+	{
 		aoi = MAX_AOI;
 	}
-
 	pos.x = INVALID_X;
 	pos.y = INVALID_Y;
 }
@@ -49,9 +47,9 @@ inline float Dis(Pos * pos1, Pos * pos2)
 inline bool IsInAOI(Pos *pos1, Pos *pos2, float aoi)
 {
 	//做粗略的判断减少Dis的判断
-	if ((abs(pos1->x - pos2->x) <= aoi) && abs(pos1->y - pos2->y) <= aoi) {
+	if ((fabs(pos1->x - pos2->x) <= aoi) && fabs(pos1->y - pos2->y) <= aoi) {
 		//如果是要求比较精确的AOI则需要判断圆形的，而不是正方形的
-#ifdef __EXACT_AOI
+#ifdef EXACT_AOI
 		if (Dis(pos1, pos2) < aoi * aoi)
 			return true;
 #else 
@@ -61,11 +59,8 @@ inline bool IsInAOI(Pos *pos1, Pos *pos2, float aoi)
 	return false;
 }
 
-Manager::Manager(size_t _width, size_t _length)
+Manager::Manager(size_t _width, size_t _length):width(_width),length(_length)
 {	
-	width = _width;
-	length = _length;
-
 	xgrid_num = width / GRID_SIZE;
 	ygrid_num = length / GRID_SIZE;
 	if (xgrid_num > MAX_LEN) {
@@ -82,10 +77,6 @@ Manager::Manager(size_t _width, size_t _length)
 
 bool Manager::enter(struct lua_State *L, int entityId, float aoi, float x, float y)
 {
-	//转换坐标系从左侧开始
-	x = x + width/2;
-	y = y + length/2;
-
 	Node *node = new Node(entityId, aoi);
 	if (node->pos.x != INVALID_X || node->pos.y != INVALID_Y) {
 		luaL_error(L, "node has enter some place:entityId=%d,x=%f,y=%f", node->entityId, node->pos.x, node->pos.y);
@@ -93,7 +84,8 @@ bool Manager::enter(struct lua_State *L, int entityId, float aoi, float x, float
 	}
 	int nxgrid_num = x / GRID_SIZE;
 	int nygrid_num = y / GRID_SIZE;
-	if ((nxgrid_num<0 || nxgrid_num>xgrid_num) || (nygrid_num<0 || nygrid_num>ygrid_num)) {
+	if ((nxgrid_num<0) || (nxgrid_num>xgrid_num) || (nygrid_num<0) || (nygrid_num>ygrid_num))
+	{
 		luaL_error(L, "enter pos is not valid:entityId=%d,x=%f,y=%f", node->entityId, x, y);
 		return false;
 	}
@@ -114,7 +106,7 @@ bool Manager::enter(struct lua_State *L, int entityId, float aoi, float x, float
 	for (int i = xl_index; i <= xr_index; i++) {
 		for (int j = yl_index; j <= yr_index; j++) {
 			list_node list = grids[i][j];
-			for (list_itor it = list.begin(); it != list.end(); ++it) {
+			for (auto it = list.begin(); it != list.end(); ++it) {
 				assert(*it != node);
 				Node * itv = *it;
 				//it进入node的视野
@@ -136,10 +128,6 @@ bool Manager::enter(struct lua_State *L, int entityId, float aoi, float x, float
 
 bool Manager::move(struct lua_State *L, int entityId, float x, float y)
 {
-	//转换坐标系从左侧开始
-	x = x + width/2;
-	y = y + length/2;
-
 	Node *node = nodes[entityId];
 	if (node == NULL)
 	{
@@ -153,7 +141,8 @@ bool Manager::move(struct lua_State *L, int entityId, float x, float y)
 	//新坐标
 	int nxgrid_num = x / GRID_SIZE;
 	int nygrid_num = y / GRID_SIZE;
-	if ((nxgrid_num<0 || nxgrid_num>xgrid_num) || (nygrid_num<0 || nygrid_num>ygrid_num)) {
+	if ((nxgrid_num<0) || (nxgrid_num>xgrid_num) || (nygrid_num<0) || (nygrid_num>ygrid_num))
+	{
 		luaL_error(L, "pos is not valid:entityId=%d,x=%f,y=%f", node->entityId, x, y);
 		return false;
 	}
@@ -161,7 +150,7 @@ bool Manager::move(struct lua_State *L, int entityId, float x, float y)
 	//删除节点
 	bool del_ret = false;
 	list_node &list = grids[oxgrid_num][oygrid_num];
-	for (list_itor it = list.begin(); it != list.end(); ++it) {
+	for (auto it = list.begin(); it != list.end(); ++it) {
 		if (*it == node) {
 			list.erase(it);
 			del_ret = true;
@@ -187,11 +176,11 @@ bool Manager::move(struct lua_State *L, int entityId, float x, float y)
 	int max_ynum = Max(oygrid_num, nygrid_num);
 	int yl_index = ((min_ynum - 1) < 0) ? 0 : (min_ynum - 1);
 	int yr_index = ((max_ynum + 1) > ygrid_num) ? ygrid_num : (max_ynum + 1);
-
 	for (int i = xl_index; i <= xr_index; i++) {
-		for (int j = yl_index; j <= yr_index; j++) {
+		for (int j = yl_index; j <= yr_index; j++) 
+		{
 			list_node list = grids[i][j];
-			for (list_itor it = list.begin(); it != list.end(); ++it) {
+			for (auto it = list.begin(); it != list.end(); ++it) {
 				Node * itv = *it;
 				assert(itv != node);
 				//老坐标在node视野内，新坐标不在node视野内
@@ -239,7 +228,7 @@ bool Manager::leave(struct lua_State *L, int entityId)
 	//删除节点
 	bool del_ret = false;
 	list_node &list = grids[nxgrid_num][nygrid_num];
-	for (list_itor it = list.begin(); it != list.end(); ++it) {
+	for (auto it = list.begin(); it != list.end(); ++it) {
 		if (*it == node) {
 			list.erase(it);
 			del_ret = true;
@@ -262,7 +251,7 @@ bool Manager::leave(struct lua_State *L, int entityId)
 	for (int i = xl_index; i <= xr_index; i++) {
 		for (int j = yl_index; j <= yr_index; j++) {
 			list_node list = grids[i][j];
-			for (list_itor it = list.begin(); it != list.end(); ++it) {
+			for (auto it = list.begin(); it != list.end(); ++it) {
 				Node * itv = *it;
 				//it离开node的视野范围
 				if (IsInAOI(&(pos), &(itv->pos), node->aoi)) {
@@ -282,13 +271,8 @@ bool Manager::leave(struct lua_State *L, int entityId)
 
 vector<int> Manager::find_entitys(float x, float y, float radius)
 {
-	//转换坐标系从左侧开始
-	x = x + width/2;
-	y = y + length/2;
-
-	int xr = Min(width, x+radius);
 	int xl = Max(0, x-radius);
-
+	int xr = Min(width, x+radius);
 	int ty = Min(length, y+radius);
 	int by = Max(0, y-radius);
 
@@ -305,9 +289,10 @@ vector<int> Manager::find_entitys(float x, float y, float radius)
 	pos.y = y;
 	//遍历半径内的格子
 	for (int i = xlgrid_num; i <= xrgrid_num; i++) {
-		for (int j = bygrid_num; j <= tygrid_num; j++) {
+		for (int j = bygrid_num; j <= tygrid_num; j++) 
+		{
 			list_node list = grids[i][j];
-			for (list_itor it = list.begin(); it != list.end(); ++it) {
+			for (auto it = list.begin(); it != list.end(); ++it) {
 				Node * itv = *it;
 				if (IsInAOI(&pos, &(itv->pos), radius))
 				{

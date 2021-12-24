@@ -19,7 +19,7 @@ using namespace std;
 #define MAX_LEN 512
 #define GRID_SIZE 30    // size*3的屏幕范围，3*3可见
 #define MAX_AOI GRID_SIZE //最大视野不能比一个格子更大
-#define __EXACT_AOI //是否精准AOI
+// #define EXACT_AOI //是否精准AOI,通过编译参数去指定
 
 typedef struct
 {
@@ -27,39 +27,37 @@ typedef struct
 	float y;
 }Pos;
 
-class Node 
+struct Node
 {
-	public:
-		int entityId;   //实体
-		float aoi;  	//视野半径
-		Pos pos;    	//节点所在x,y
+public:
+	int entityId;   //实体
+	float aoi;  	//视野半径
+	Pos pos;    	//节点所在x,y
 
-		Node(int entityId, float aoi);
+	Node(int _entityId, float _aoi);
 };
 
 
 typedef list<Node *> list_node;
-typedef list_node::iterator list_itor;
-
 typedef map<int, Node *> map_node;
 
 class Manager
 { 
-	private:
-		int width;		//宽度
-		int length;		//长度
-		int xgrid_num;  //x轴的格子数
-		int ygrid_num;  //y轴的格子数
-		vector< vector<list_node> > grids;  //二维数组保存将地图xy轴切割后的格子
-		map_node nodes;	//所有的node节点
-	public:
-		Manager(size_t width, size_t length); 
-		~Manager(){};
-		
-		bool enter(struct lua_State *map, int entityId, float aoi, float x, float y);
-		bool leave(struct lua_State *map, int entityId);
-		bool move(struct lua_State *map, int entityId, float x, float y);
-		vector<int> find_entitys(float x, float y, float radius);
+public:
+	Manager(size_t width, size_t length); 
+	~Manager(){};
+	
+	bool enter(struct lua_State *map, int entityId, float aoi, float x, float y);
+	bool leave(struct lua_State *map, int entityId);
+	bool move(struct lua_State *map, int entityId, float x, float y);
+	vector<int> find_entitys(float x, float y, float radius);
+private:
+	int width;		//宽度
+	int length;		//长度
+	int xgrid_num;  //x轴的格子数
+	int ygrid_num;  //y轴的格子数
+	vector< vector<list_node> > grids;  //二维数组保存将地图xy轴切割后的格子
+	map_node nodes;	//所有的node节点
 };
 
 #endif

@@ -24,6 +24,7 @@ static int new_manager(struct lua_State *L) {
     lua_setmetatable(L, -2);    //userdata.__index=Manager
     return 1;
 }
+
 //manager:enter(map, entityId, aoi, x, y)
 static int lenter(struct lua_State *L) {
 	int num = lua_gettop(L);
@@ -93,7 +94,7 @@ static int lfind_entitys(struct lua_State *L) {
     float y = luaL_checknumber(L, 3);
     float radius = luaL_checknumber(L, 4);
     lua_pop(L, 3);
-    vector<int> entitys = (*manager)->find_entitys(x,y,radius);
+    auto entitys = (*manager)->find_entitys(x,y,radius);
 
     lua_newtable(L);
     for (size_t i = 0; i < entitys.size(); i++)
@@ -113,6 +114,7 @@ static int lauto_gc(struct lua_State *L)
     {
         delete *manager;
     }
+    printf("manager gc\n");
 	return 0;
 }
 
@@ -132,11 +134,6 @@ static const luaL_Reg lib_f[] = {
 //require "aoi"
 int luaopen_aoi(struct lua_State *L) {
     luaL_checkversion(L);
-
-	if(L == NULL)
-	{
-		return 1;
-	}
 
     //LUA_REGISTRYINDEX全局注册表中, 注册一个key为className的metatable
     if (!luaL_newmetatable(L, "Manager")) {

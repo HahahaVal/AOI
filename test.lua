@@ -14,60 +14,25 @@ local M = {}
 
 M.manager = aoi.new(300,300)
 
-for i=100, 1, -1 do
-    local random_aoi = math.random(1,150)
-   
-    local random_x = math.random(1,150)
-    local symbol = math.random(0, 1)
-    if symbol == 0 then
-        random_x = -random_x
-    end
-    local random_y = math.random(1,150)
-    local symbol = math.random(0, 1)
-    if symbol == 0 then
-        random_y = -random_y
-    end
-    M.manager:enter(map, i, random_aoi, random_x, random_y)
-
-   
-    local random_x = math.random(1,150)
-    local symbol = math.random(0, 1)
-    if symbol == 0 then
-        random_x = -random_x
-    end
-    local symbol = math.random(0, 1)
-    local random_y = math.random(1,150)
-    if symbol == 0 then
-        random_y = -random_y
-    end
-    M.manager:move(map, i, random_x, random_y)
-
-
-    local random_x = math.random(1,150)
-    local symbol = math.random(0, 1)
-    if symbol == 0 then
-        random_x = -random_x
-    end
-    local symbol = math.random(0, 1)
-    local random_y = math.random(1,150)
-    if symbol == 0 then
-        random_y = -random_y
-    end
+for i=10000, 1, -1 do
+    local random_aoi = math.random(1,30)
+    local random_x1 = math.random(0,300)
+    local random_y1 = math.random(0,300)
+    M.manager:enter(map, i, random_aoi, random_x1, random_y1)
+    local random_x2 = math.random(0,300)
+    local random_y2 = math.random(0,300)
+    M.manager:move(map, i, random_x2, random_y2)
+    local random_x3 = math.random(0,300)
+    local random_y3 = math.random(0,300)
     local random_radius = math.random(0, 20)
-    local ret = M.manager:find_entitys(random_x, random_y, random_radius)
+    local ret = M.manager:find_entitys(random_x3, random_y3, random_radius)
     if #ret > 0 then
-        print("~~~~~~~~~~~~~~~FFFFF",#ret,random_x,random_y,random_radius)
+        print("~~~~~~~~~~~~~~~FFFFF",#ret,random_x3,random_y3,random_radius)
     end
 end
 
-for i=100, 1, -1 do
+for i=10000, 1, -1 do
     M.manager:leave(map, i)
 end
 
-
-M.manager:enter(map, 1, 1, -63.2, -77.3)
-
-local ret = M.manager:find_entitys(-63.71772, -72.64935, 2)
-print("~~~~~~~~~~~~~~FFFFF",#ret)
-
-M.manager:leave(map, 1)
+collectgarbage("collect")
