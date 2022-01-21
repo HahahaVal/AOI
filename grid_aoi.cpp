@@ -50,7 +50,7 @@ inline bool IsInAOI(Pos *pos1, Pos *pos2, float aoi)
 	if ((fabs(pos1->x - pos2->x) <= aoi) && fabs(pos1->y - pos2->y) <= aoi) {
 		//如果是要求比较精确的AOI则需要判断圆形的，而不是正方形的
 #ifdef EXACT_AOI
-		if (Dis(pos1, pos2) < aoi * aoi)
+		if (Dis(pos1, pos2) < aoi)
 			return true;
 #else 
 		return true;
