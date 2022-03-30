@@ -17,7 +17,7 @@ using namespace std;
 #define INVALID_X -99999999
 #define INVALID_Y -99999999
 #define MAX_LEN 512
-#define GRID_SIZE 30    // size*3的屏幕范围，3*3可见
+#define GRID_SIZE 100    // size*3的屏幕范围，3*3可见
 #define MAX_AOI GRID_SIZE //最大视野不能比一个格子更大
 // #define EXACT_AOI //是否精准AOI,通过编译参数去指定
 
